@@ -8,6 +8,11 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
+    public function index()
+    {
+        $tasks = Task::where('user_id', auth()->id())->paginate(10);
+        return $tasks;
+    }
     public function addtask(Request $request)
     {
 
@@ -70,6 +75,29 @@ class TaskController extends Controller
                 'status' => 0,
                 'message' => 'Task is not pending, status remains unchanged.',
             ]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:tasks,id',
+        ]);
+    
+        $task = Task::find($request->input('id'));
+    
+        if (!$task) {
+            return redirect()->route('homepage')->withErrors(['error' => 'Task not found']);
+        }
+    
+        if ($task->user_id != Auth::id()) {
+            return redirect()->route('homepage')->withErrors(['error' => 'You do not have permission to delete this task']);
+        }
+    
+        if ($task->delete()) {
+            return redirect()->route('homepage')->withSuccess('Task deleted successfully');
+        } else {
+            return redirect()->route('homepage')->withErrors(['error' => 'Unable to delete task']);
         }
     }
     

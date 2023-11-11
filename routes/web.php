@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController;
 use GuzzleHttp\Middleware;
 
 /*
@@ -29,4 +30,5 @@ Route::group(['middleware'=>'guest'],function(){
 Route::group(['middleware'=>'auth'],function(){
     Route::post('/logout',[AuthController::class,'logout'])->name('logout');
     Route::get('/home',[AuthController::class,'home'])->name('homepage');
+    Route::post('/delete',[TaskController::class,'delete'])->name('delete');
 });

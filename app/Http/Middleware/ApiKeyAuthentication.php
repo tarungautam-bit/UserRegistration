@@ -16,8 +16,7 @@ class ApiKeyAuthentication
      */
     public function handle(Request $request, Closure $next)
     {
-        dd($request);
-        $apiKey = $request->header('API_KEY');
+        $apiKey = $request->header('X-API-KEY');
     
         if ($apiKey !== 'helloatg') {
             return response()->json(['status' => 0, 'message' => 'Invalid API key'], 401);
